@@ -16,6 +16,12 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    @GetMapping("/test")
+    public String test() {
+        return "API is working";
+    }
+
+
     // Add movie
     @PostMapping
     public ResponseEntity<Movie> addMovie(@Valid @RequestBody Movie movie) {
