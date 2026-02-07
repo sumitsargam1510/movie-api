@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/movies")
 public class MovieController {
@@ -16,6 +18,7 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    //testing api
     @GetMapping("/test")
     public String test() {
         return "API is working";
@@ -24,10 +27,14 @@ public class MovieController {
 
     // Add movie
     @PostMapping
-    public ResponseEntity<Movie> addMovie(@Valid @RequestBody Movie movie) {
-        Movie savedMovie = movieService.addMovie(movie);
-        return ResponseEntity.ok(savedMovie);
+    public ResponseEntity<?> addMovie(@Valid @RequestBody Movie movie) {
+        try {
+            return ResponseEntity.ok(movieService.addMovie(movie));
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
+
 
     // Get movie by ID
     @GetMapping("/{id}")

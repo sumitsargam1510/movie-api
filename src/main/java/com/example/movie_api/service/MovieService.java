@@ -13,14 +13,28 @@ public class MovieService {
     private long idCounter = 1;
 
     public Movie addMovie(Movie movie) {
+        if (isDuplicate(movie)) {
+            throw new IllegalArgumentException("Duplicate movie already exists");
+        }
         movie.setId(idCounter++);
         movies.add(movie);
         return movie;
     }
+
 
     public Optional<Movie> getMovieById(Long id) {
         return movies.stream()
                 .filter(movie -> movie.getId().equals(id))
                 .findFirst();
     }
+
+    private boolean isDuplicate(Movie movie) {
+        return movies.stream().anyMatch(m ->
+                m.getName().equalsIgnoreCase(movie.getName()) &&
+                        m.getDescription().equalsIgnoreCase(movie.getDescription()) &&
+                        ((m.getGenre() == null && movie.getGenre() == null) ||
+                                (m.getGenre() != null && m.getGenre().equalsIgnoreCase(movie.getGenre())))
+        );
+    }
+
 }
